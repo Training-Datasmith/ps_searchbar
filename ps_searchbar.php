@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * 2007-2020 PrestaShop SA and Contributors
  *
@@ -39,7 +41,7 @@ class Ps_Searchbar extends Module implements WidgetInterface
     /**
      * @var string Name of the module running on PS 1.6.x. Used for data migration.
      */
-    const PS_16_EQUIVALENT_MODULE = 'blocksearch';
+    public const PS_16_EQUIVALENT_MODULE = 'blocksearch';
 
     private $templateFile;
 
