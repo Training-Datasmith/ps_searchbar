@@ -63,6 +63,12 @@ class Ps_Searchbar extends Module implements WidgetInterface
         $this->templateFile = 'module:ps_searchbar/ps_searchbar.tpl';
     }
 
+    /**
+     * Installs the module, migrates data from the PrestaShop 1.6 equivalent module if present,
+     * and registers the displayTop, displaySearch, and displayHeader hooks.
+     *
+     * @return bool True on success, false on failure
+     */
     public function install()
     {
         // Migrate data from 1.6 equivalent module (if applicable), then uninstall
@@ -80,6 +86,11 @@ class Ps_Searchbar extends Module implements WidgetInterface
         ;
     }
 
+    /**
+     * Registers jQuery UI autocomplete, the module stylesheet, and the search JS on every page load.
+     *
+     * @return void
+     */
     public function hookDisplayHeader()
     {
         $this->context->controller->addJqueryUI('ui.autocomplete');
@@ -87,6 +98,14 @@ class Ps_Searchbar extends Module implements WidgetInterface
         $this->context->controller->registerJavascript('modules-searchbar', 'modules/' . $this->name . '/ps_searchbar.js', ['position' => 'bottom', 'priority' => 150]);
     }
 
+    /**
+     * Returns template variables for the search bar widget.
+     *
+     * @param string $hookName    Name of the hook rendering this widget
+     * @param array  $configuration Hook configuration parameters
+     *
+     * @return array{search_controller_url: string, search_string?: string}
+     */
     public function getWidgetVariables($hookName, array $configuration = [])
     {
         $widgetVariables = [
@@ -102,6 +121,14 @@ class Ps_Searchbar extends Module implements WidgetInterface
         return $widgetVariables;
     }
 
+    /**
+     * Renders the search bar widget template.
+     *
+     * @param string $hookName    Name of the hook rendering this widget
+     * @param array  $configuration Hook configuration parameters
+     *
+     * @return string Rendered HTML of the search bar
+     */
     public function renderWidget($hookName, array $configuration = [])
     {
         $this->smarty->assign($this->getWidgetVariables($hookName, $configuration));
