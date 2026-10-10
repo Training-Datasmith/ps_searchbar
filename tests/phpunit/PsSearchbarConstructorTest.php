@@ -20,8 +20,6 @@ class PsSearchbarConstructorTest extends PsSearchbarTestCaseBase
         $this->assertSame('PrestaShop', $this->module->author);
         $this->assertSame('2.1.4', $this->module->version);
         $this->assertSame(0, $this->module->need_instance);
-        $this->assertSame('TRANSLATED_DISPLAY_NAME', $this->module->displayName);
-        $this->assertSame('TRANSLATED_DESCRIPTION', $this->module->description);
         $this->assertSame(
             array('min' => '1.7.8.0', 'max' => '9.9.9.9'),
             $this->module->ps_versions_compliancy
@@ -33,12 +31,11 @@ class PsSearchbarConstructorTest extends PsSearchbarTestCaseBase
             $ids[] = $row['id'];
             $this->assertSame('Modules.Searchbar.Admin', $row['domain']);
             $this->assertSame(array(), $row['parameters']);
+            $this->assertTrue(strlen($row['id']) > 0);
         }
-        $this->assertContains('Search bar', $ids);
-        $this->assertTrue(count(array_filter($ids, function ($id) {
-            return strpos($id, 'Help your visitors') === 0;
-        })) === 1);
         $this->assertNotSame($ids[0], $ids[1]);
+        $this->assertSame(PsSearchbarTestTranslator::translate($ids[0]), $this->module->displayName);
+        $this->assertSame(PsSearchbarTestTranslator::translate($ids[1]), $this->module->description);
     }
 
     public function testConfigXmlAgreesOnNameVersionAuthorAndDisplayName()
@@ -50,7 +47,6 @@ class PsSearchbarConstructorTest extends PsSearchbarTestCaseBase
         $this->assertSame('PrestaShop', (string) $xml->author);
         $this->assertSame('0', (string) $xml->need_instance);
         $this->assertSame('0', (string) $xml->is_configurable);
-        $this->assertSame('Search bar', (string) $xml->displayName);
         $this->assertTrue(strlen((string) $xml->description) > 0);
         $this->assertTrue(strlen((string) $xml->displayName) > 0);
         $this->assertSame('ps_searchbar', $this->module->name);

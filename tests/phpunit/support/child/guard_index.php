@@ -6,6 +6,6 @@ if ($target === '' || !is_file($target)) {
     exit(1);
 }
 include $target;
-if ($sentinel !== '' && file_exists($sentinel)) {
+if ($sentinel !== '') {
     file_put_contents($sentinel, '1');
 }

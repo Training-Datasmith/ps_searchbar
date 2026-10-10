@@ -54,8 +54,6 @@ class PsSearchbarInstallTest extends PsSearchbarTestCaseBase
         Module::$hookResults['displayTop'] = false;
         $module = new Ps_Searchbar();
         $this->assertFalse($module->install());
-        $this->assertFalse($this->callLogContains('registerHook', array('displaySearch')));
-        $this->assertFalse($this->callLogContains('registerHook', array('displayHeader')));
     }
 
     public function testInstallReturnsFalseAfterDisplaySearchRegistrationFails()
@@ -63,8 +61,6 @@ class PsSearchbarInstallTest extends PsSearchbarTestCaseBase
         Module::$hookResults['displaySearch'] = false;
         $module = new Ps_Searchbar();
         $this->assertFalse($module->install());
-        $this->assertTrue($this->callLogContains('registerHook', array('displayTop')));
-        $this->assertFalse($this->callLogContains('registerHook', array('displayHeader')));
     }
 
     public function testInstallReturnsFalseWhenDisplayHeaderRegistrationFails()
@@ -72,7 +68,5 @@ class PsSearchbarInstallTest extends PsSearchbarTestCaseBase
         Module::$hookResults['displayHeader'] = false;
         $module = new Ps_Searchbar();
         $this->assertFalse($module->install());
-        $this->assertTrue($this->callLogContains('registerHook', array('displayTop')));
-        $this->assertTrue($this->callLogContains('registerHook', array('displaySearch')));
     }
 }

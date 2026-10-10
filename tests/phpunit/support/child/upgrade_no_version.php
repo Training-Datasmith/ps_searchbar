@@ -6,6 +6,6 @@ if ($root === false) {
     exit(1);
 }
 include $root . '/upgrade/upgrade-2.1.2.php';
-if ($sentinel !== '' && file_exists($sentinel)) {
+if ($sentinel !== '') {
     file_put_contents($sentinel, '1');
 }

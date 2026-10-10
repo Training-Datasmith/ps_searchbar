@@ -125,13 +125,7 @@ class PsSearchbarTestTranslator
 
     public static function translate($id)
     {
-        if ($id === 'Search bar') {
-            return 'TRANSLATED_DISPLAY_NAME';
-        }
-        if (strpos($id, 'Help your visitors') === 0) {
-            return 'TRANSLATED_DESCRIPTION';
-        }
-        return 'TRANSLATED:' . $id;
+        return 'TRANSLATED:' . md5($id);
     }
 }
 

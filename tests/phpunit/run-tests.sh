@@ -66,14 +66,28 @@ SHUFFLED_XML="$WORK/phpunit-shuffled.xml"
   /work/phpunit-4.8.36.phar -c phpunit.xml --log-junit /work/junit.xml \
   | tee "$WORK/phpunit.log"
 
-if ! grep -q "OK ($EXPECTED_TEST_COUNT tests," "$WORK/phpunit.log"; then
-  echo "Canonical run did not end with OK ($EXPECTED_TEST_COUNT tests, ...)" >&2
-  exit 1
-fi
-if grep -qiE '(, Skipped:|, Incomplete:|, Risky:|There were [0-9]+ warnings|WARNINGS!)' "$WORK/phpunit.log"; then
-  echo "Canonical run reported skipped/incomplete/risky/test warnings" >&2
-  exit 1
-fi
+assert_clean_phpunit_log() {
+  local log_file="$1"
+  local label="$2"
+  if ! grep -q "OK ($EXPECTED_TEST_COUNT tests," "$log_file"; then
+    echo "$label did not end with OK ($EXPECTED_TEST_COUNT tests, ...)" >&2
+    exit 1
+  fi
+  if grep -qE '^Warning:' "$log_file"; then
+    echo "$label reported a PHPUnit Warning line" >&2
+    exit 1
+  fi
+  if grep -qiE '(, Skipped:|, Incomplete:|, Risky:|There were [0-9]+ warnings|WARNINGS!)' "$log_file"; then
+    echo "$label reported skipped/incomplete/risky/test warnings" >&2
+    exit 1
+  fi
+  if grep -qiE '\bNotice\b|\bWarning\b|\bDeprecated\b|Strict Standards|\bParse error\b|\bFatal error\b|Catchable fatal error' "$log_file"; then
+    echo "$label contained a PHP diagnostic" >&2
+    exit 1
+  fi
+}
+
+assert_clean_phpunit_log "$WORK/phpunit.log" "Canonical run"
 
 "${DOCKER[@]}" run --rm --network none \
   -v "$REPO_ROOT":/src:ro \
@@ -89,9 +103,6 @@ fi
   /work/phpunit-4.8.36.phar -c /work/phpunit-shuffled.xml --log-junit /work/junit-shuffled.xml \
   | tee "$WORK/phpunit-shuffled.log"
 
-if ! grep -q "OK ($EXPECTED_TEST_COUNT tests," "$WORK/phpunit-shuffled.log"; then
-  echo "Shuffled run did not end with OK ($EXPECTED_TEST_COUNT tests, ...)" >&2
-  exit 1
-fi
+assert_clean_phpunit_log "$WORK/phpunit-shuffled.log" "Shuffled run"
 
 echo "All runs passed (PHP $PHP_VERSION, $EXPECTED_TEST_COUNT tests)."

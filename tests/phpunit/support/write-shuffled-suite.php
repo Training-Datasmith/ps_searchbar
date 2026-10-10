@@ -38,7 +38,11 @@ $lines[] = '<phpunit bootstrap="' . htmlspecialchars($bootstrap, ENT_QUOTES, 'UT
 $lines[] = '         colors="true"';
 $lines[] = '         convertErrorsToExceptions="true"';
 $lines[] = '         convertNoticesToExceptions="true"';
-$lines[] = '         convertWarningsToExceptions="true">';
+$lines[] = '         convertWarningsToExceptions="true"';
+$lines[] = '         beStrictAboutTestsThatDoNotTestAnything="true"';
+$lines[] = '         beStrictAboutOutputDuringTests="true"';
+$lines[] = '         beStrictAboutTestSize="true"';
+$lines[] = '         beStrictAboutTodoAnnotatedTests="true">';
 $lines[] = '    <testsuites>';
 $lines[] = '        <testsuite name="module-tests">';
 foreach ($files as $file) {

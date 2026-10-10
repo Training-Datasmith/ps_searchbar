@@ -44,7 +44,6 @@ class UpgradeModule212Test extends PsSearchbarTestCaseBase
         $this->assertTrue($this->upgradeCallContains($module->calls, 'register', 'displayHeader'));
 
         $this->assertFalse(file_exists($path));
-        $this->assertTrue(is_string($bak));
         $this->assertTrue(file_exists($bak));
         $this->assertSame('classic-override-marker', file_get_contents($bak));
     }

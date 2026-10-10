@@ -79,10 +79,23 @@ class PsSearchbarWidgetTest extends PsSearchbarTestCaseBase
     {
         $this->module->context->smarty->setTemplateVars(array());
         $top = $this->module->renderWidget('displayTop', array());
-        Module::$callLog = array();
         $search = $this->module->renderWidget('displaySearch', array());
         $this->assertSame('SEARCHBAR_FETCH_SENTINEL', $top);
         $this->assertSame('SEARCHBAR_FETCH_SENTINEL', $search);
+
+        $fetches = array();
+        foreach (Module::$callLog as $entry) {
+            if ($entry['method'] === 'fetch') {
+                $fetches[] = $entry['args'];
+            }
+        }
+        $this->assertSame(
+            array(
+                array('module:ps_searchbar/ps_searchbar.tpl'),
+                array('module:ps_searchbar/ps_searchbar.tpl'),
+            ),
+            $fetches
+        );
 
         foreach (array('displayTop', 'displaySearch') as $hook) {
             $this->module->context->smarty->setTemplateVars(array());
